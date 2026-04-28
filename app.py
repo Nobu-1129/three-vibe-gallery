@@ -93,8 +93,24 @@ def inject_css() -> None:
         .gallery-card {
             padding: .25rem 0 .45rem;
         }
-        .gallery-card img {
+        .thumb-frame {
+            align-items: center;
+            background: #f4f6f8;
+            border: 1px solid #eaecf0;
             border-radius: 10px;
+            display: flex;
+            height: 280px;
+            justify-content: center;
+            overflow: hidden;
+            width: 100%;
+        }
+        .thumb-frame img {
+            display: block;
+            height: 100%;
+            max-height: 100%;
+            max-width: 100%;
+            object-fit: contain;
+            width: 100%;
         }
         .card-title {
             color: #182230;
@@ -103,6 +119,7 @@ def inject_css() -> None:
             line-height: 1.38;
             margin-top: .9rem;
             margin-bottom: .34rem;
+            min-height: 3.35rem;
         }
         .poster-name {
             color: #5d6678;
@@ -301,6 +318,11 @@ def inject_css() -> None:
             text-align: center;
             padding: 1rem;
         }
+        .thumb-frame .image-placeholder {
+            border: 0;
+            min-height: 100%;
+            width: 100%;
+        }
         .stButton > button {
             min-height: 3rem;
             border-radius: 10px;
@@ -349,6 +371,12 @@ def inject_css() -> None:
             }
             .detail-title {
                 font-size: 1.7rem;
+            }
+            .thumb-frame {
+                height: 280px;
+            }
+            .card-title {
+                min-height: 0;
             }
         }
         </style>
@@ -419,6 +447,20 @@ def render_image(url: str | None, *, large: bool = False) -> None:
             f'<div class="image-placeholder" style="min-height: {height}px;">画像を表示できません</div>',
             unsafe_allow_html=True,
         )
+
+
+def render_thumbnail(url: str | None) -> None:
+    if not url:
+        st.markdown(
+            '<div class="thumb-frame"><div class="image-placeholder">画像を表示できません</div></div>',
+            unsafe_allow_html=True,
+        )
+        return
+
+    st.markdown(
+        f'<div class="thumb-frame"><img src="{escape(url, quote=True)}" alt="作品画像"></div>',
+        unsafe_allow_html=True,
+    )
 
 
 @st.cache_data(ttl=60)
@@ -502,7 +544,7 @@ def render_card(client: Client, row: dict[str, Any]) -> None:
 
     with st.container(border=True):
         st.markdown('<div class="gallery-card">', unsafe_allow_html=True)
-        render_image(image_url)
+        render_thumbnail(image_url)
         st.markdown(f'<div class="card-title">{escape(title)}</div>', unsafe_allow_html=True)
         st.markdown(f'<div class="poster-name">by {escape(poster_name)}</div>', unsafe_allow_html=True)
         st.markdown("</div>", unsafe_allow_html=True)
@@ -527,13 +569,19 @@ def render_gallery() -> None:
             render_card(client, row)
 
 
-def render_info_row(label: str, body: str) -> None:
+def render_info_panel(poster_name: str, published_at: str) -> None:
     st.markdown(
         (
+            '<div class="detail-panel">'
             '<div class="info-row">'
-            f'<div class="info-label">{escape(label)}</div>'
-            f'<div class="info-value">{escape(body)}</div>'
-            "</div>"
+            '<div class="info-label">投稿者名</div>'
+            f'<div class="info-value">{escape(poster_name)}</div>'
+            '</div>'
+            '<div class="info-row">'
+            '<div class="info-label">公開日</div>'
+            f'<div class="info-value">{escape(published_at)}</div>'
+            '</div>'
+            '</div>'
         ),
         unsafe_allow_html=True,
     )
@@ -584,12 +632,9 @@ def render_detail(work_id: str) -> None:
         st.markdown('<div class="detail-image-note"></div>', unsafe_allow_html=True)
         st.markdown(f'<div class="detail-title">{escape(title)}</div>', unsafe_allow_html=True)
 
-        st.markdown('<div class="detail-panel">', unsafe_allow_html=True)
-        render_info_row("投稿者名", poster_name)
-        render_info_row("公開日", published_at)
+        render_info_panel(poster_name, published_at)
         render_focus_box(focus_point)
         render_score_card(impression_score)
-        st.markdown("</div>", unsafe_allow_html=True)
 
         st.markdown('<div class="comments-heading">3人コメント</div>', unsafe_allow_html=True)
         render_ai_comment_card("ジンさん", "ジ", clean_text(row.get("comment_jin")), "jin")
