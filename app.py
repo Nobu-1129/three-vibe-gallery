@@ -35,182 +35,260 @@ def inject_css() -> None:
     st.markdown(
         """
         <style>
+        html {
+            font-size: 16px;
+        }
         .stApp {
             background:
-                radial-gradient(circle at top left, rgba(255, 222, 173, .3), transparent 34rem),
-                linear-gradient(180deg, #fffaf3 0%, #f6f8fb 46%, #ffffff 100%);
+                radial-gradient(circle at top left, rgba(255, 226, 186, .36), transparent 30rem),
+                linear-gradient(180deg, #fffaf4 0%, #f7f8fb 46%, #ffffff 100%);
         }
         .block-container {
-            max-width: 1180px;
-            padding-top: 2.1rem;
+            max-width: 1160px;
+            padding-top: 3rem;
             padding-bottom: 4rem;
+            padding-left: 1rem;
+            padding-right: 1rem;
         }
         .brand-label {
             color: #667085;
-            font-size: .92rem;
+            font-size: 1rem;
             font-weight: 700;
-            margin-bottom: .32rem;
+            line-height: 1.45;
+            margin-bottom: .45rem;
         }
         .gallery-title {
             color: #1f2937;
-            font-size: 2.45rem;
+            font-size: 2.05rem;
             font-weight: 850;
-            line-height: 1.08;
-            margin-bottom: .42rem;
+            line-height: 1.12;
+            margin-bottom: .55rem;
         }
         .gallery-title span {
             color: #4b5563;
-            font-size: 1.34rem;
+            display: inline-block;
+            font-size: 1.35rem;
             font-weight: 760;
+            margin-top: .18rem;
         }
         .gallery-lead {
             color: #202938;
-            font-size: 1.12rem;
-            font-weight: 650;
+            font-size: 1.13rem;
+            font-weight: 680;
+            line-height: 1.6;
             margin-bottom: .25rem;
         }
         .gallery-sub {
             color: #667085;
-            margin-bottom: 1.65rem;
+            font-size: 1rem;
+            line-height: 1.65;
+            margin-bottom: 1.7rem;
         }
         .section-label {
             color: #344054;
-            font-size: 1rem;
-            font-weight: 800;
-            margin: .9rem 0 .65rem;
+            font-size: 1.12rem;
+            font-weight: 820;
+            margin: 1rem 0 .8rem;
         }
-        .card-image-wrap img {
-            border-radius: 7px;
+        .gallery-card {
+            padding: .25rem 0 .45rem;
+        }
+        .gallery-card img {
+            border-radius: 8px;
         }
         .card-title {
             color: #182230;
-            font-size: 1.08rem;
-            font-weight: 820;
-            line-height: 1.34;
-            margin-top: .72rem;
-            margin-bottom: .25rem;
+            font-size: 1.22rem;
+            font-weight: 830;
+            line-height: 1.38;
+            margin-top: .9rem;
+            margin-bottom: .34rem;
         }
-        .meta {
-            color: #667085;
-            font-size: .85rem;
-            line-height: 1.48;
-            margin-bottom: .55rem;
-        }
-        .score-badge {
-            display: inline-flex;
-            width: fit-content;
-            color: #322100;
-            background: #ffe7ad;
-            border: 1px solid #f1c96d;
-            border-radius: 999px;
-            font-size: .9rem;
-            font-weight: 840;
-            padding: .24rem .64rem;
-            margin: .1rem 0 .68rem;
-        }
-        .focus-box {
-            color: #303948;
-            background: #fbf7ef;
-            border: 1px solid #eadfcd;
-            border-left: 4px solid #d29b4a;
-            border-radius: 8px;
-            font-size: .92rem;
-            line-height: 1.6;
-            padding: .72rem .78rem;
-            margin: .18rem 0 .88rem;
-        }
-        .focus-label {
-            color: #745321;
-            font-size: .78rem;
-            font-weight: 840;
-            margin-bottom: .24rem;
-        }
-        .detail-panel {
-            background: rgba(255, 255, 255, .82);
-            border: 1px solid #e5e7eb;
-            border-radius: 8px;
-            padding: 1rem 1.05rem;
+        .poster-name {
+            color: #5d6678;
+            font-size: 1rem;
+            font-weight: 650;
+            line-height: 1.5;
+            margin-bottom: .9rem;
         }
         .detail-title {
             color: #182230;
-            font-size: 2rem;
+            font-size: 1.85rem;
             font-weight: 860;
-            line-height: 1.16;
-            margin-bottom: .75rem;
+            line-height: 1.18;
+            margin: 1.15rem 0 .85rem;
+        }
+        .detail-panel {
+            background: rgba(255, 255, 255, .86);
+            border: 1px solid #e5e7eb;
+            border-radius: 10px;
+            padding: 1.05rem;
         }
         .info-row {
             border-bottom: 1px solid #edf0f4;
-            padding: .58rem 0;
+            padding: .72rem 0;
         }
         .info-row:last-child {
             border-bottom: 0;
         }
         .info-label {
             color: #697386;
-            font-size: .82rem;
+            font-size: 1rem;
             font-weight: 760;
-            margin-bottom: .12rem;
+            line-height: 1.45;
+            margin-bottom: .18rem;
         }
         .info-value {
             color: #1f2937;
-            font-size: .98rem;
+            font-size: 1.06rem;
             font-weight: 650;
+            line-height: 1.55;
+        }
+        .focus-box {
+            color: #303948;
+            background: #fbf7ef;
+            border: 1px solid #eadfcd;
+            border-left: 5px solid #d29b4a;
+            border-radius: 10px;
+            font-size: 1.05rem;
+            line-height: 1.7;
+            padding: .95rem 1rem;
+            margin: .95rem 0 1.05rem;
+        }
+        .focus-label {
+            color: #745321;
+            font-size: 1rem;
+            font-weight: 840;
+            line-height: 1.4;
+            margin-bottom: .4rem;
+        }
+        .score-card {
+            background: #ffffff;
+            border: 1px solid #e1e5eb;
+            border-radius: 14px;
+            box-shadow: 0 10px 28px rgba(31, 41, 55, .08);
+            margin-top: 1rem;
+            padding: 1.1rem 1rem 1.15rem;
+            text-align: center;
+        }
+        .score-kicker {
+            color: #344054;
+            font-size: 1rem;
+            font-weight: 760;
+            line-height: 1.6;
+            margin-bottom: .35rem;
+        }
+        .score-number {
+            color: #1f2937;
+            font-size: 3.6rem;
+            font-weight: 900;
+            letter-spacing: 0;
+            line-height: 1;
+            margin: .2rem 0 .35rem;
+        }
+        .score-caption {
+            color: #667085;
+            font-size: 1rem;
+            font-weight: 700;
+            line-height: 1.4;
         }
         .comment-card {
             background: #ffffff;
             border: 1px solid #e5e7eb;
-            border-radius: 8px;
+            border-radius: 10px;
             min-height: 150px;
-            padding: .95rem;
+            padding: 1rem;
         }
         .comment-name {
             color: #283241;
+            font-size: 1.06rem;
             font-weight: 830;
-            margin-bottom: .45rem;
+            line-height: 1.45;
+            margin-bottom: .55rem;
         }
         .comment-body {
             color: #3b4656;
-            font-size: .95rem;
-            line-height: 1.68;
+            font-size: 1.03rem;
+            line-height: 1.72;
         }
         .coming-soon {
             background: #eef7f3;
             border: 1px solid #cee6dc;
-            border-radius: 8px;
-            margin-top: 1.2rem;
-            padding: 1rem 1.1rem;
+            border-radius: 10px;
+            margin-top: 1.25rem;
+            padding: 1.1rem;
         }
         .soon-label {
             display: inline-block;
             color: #116149;
             background: #d9f0e8;
             border-radius: 999px;
-            font-size: .76rem;
+            font-size: .95rem;
             font-weight: 840;
-            padding: .16rem .55rem;
-            margin-bottom: .42rem;
+            line-height: 1.35;
+            padding: .22rem .68rem;
+            margin-bottom: .55rem;
         }
         .image-placeholder {
             display: flex;
             align-items: center;
             justify-content: center;
-            min-height: 220px;
+            min-height: 240px;
             color: #697386;
             background: #f2f4f7;
             border: 1px dashed #cfd5df;
-            border-radius: 8px;
+            border-radius: 10px;
+            font-size: 1rem;
+            line-height: 1.6;
             text-align: center;
             padding: 1rem;
         }
+        .stButton > button {
+            min-height: 3rem;
+            border-radius: 10px;
+            font-size: 1.03rem;
+            font-weight: 760;
+        }
+        div[data-testid="stVerticalBlockBorderWrapper"] {
+            border-radius: 12px;
+        }
+        @media (min-width: 780px) {
+            .block-container {
+                padding-top: 3.2rem;
+                padding-left: 2rem;
+                padding-right: 2rem;
+            }
+            .gallery-title {
+                font-size: 2.65rem;
+            }
+            .gallery-title span {
+                font-size: 1.45rem;
+            }
+            .detail-title {
+                margin-top: 0;
+                font-size: 2.15rem;
+            }
+            .score-number {
+                font-size: 4.2rem;
+            }
+        }
         @media (max-width: 760px) {
+            .block-container {
+                padding-top: 3.4rem;
+            }
+            div[data-testid="column"] {
+                width: 100% !important;
+                flex: 1 1 100% !important;
+                min-width: 100% !important;
+            }
+            div[data-testid="stHorizontalBlock"] {
+                gap: 1.05rem;
+            }
             .gallery-title {
                 font-size: 2rem;
             }
-            .gallery-title span {
-                font-size: 1.18rem;
-            }
-            .detail-title {
-                font-size: 1.55rem;
+            .detail-panel {
+                margin-top: .3rem;
             }
         }
         </style>
@@ -266,7 +344,7 @@ def get_image_url(client: Client, image_path: Any) -> str | None:
 
 def render_image(url: str | None, *, large: bool = False) -> None:
     if not url:
-        height = 360 if large else 220
+        height = 380 if large else 260
         st.markdown(
             f'<div class="image-placeholder" style="min-height: {height}px;">画像を表示できません</div>',
             unsafe_allow_html=True,
@@ -274,11 +352,9 @@ def render_image(url: str | None, *, large: bool = False) -> None:
         return
 
     try:
-        st.markdown('<div class="card-image-wrap">', unsafe_allow_html=True)
         st.image(url, use_container_width=True)
-        st.markdown("</div>", unsafe_allow_html=True)
     except Exception:
-        height = 360 if large else 220
+        height = 380 if large else 260
         st.markdown(
             f'<div class="image-placeholder" style="min-height: {height}px;">画像を表示できません</div>',
             unsafe_allow_html=True,
@@ -345,24 +421,31 @@ def render_focus_box(text: str) -> None:
     )
 
 
+def render_score_card(score: str) -> None:
+    st.markdown(
+        (
+            '<div class="score-card">'
+            '<div class="score-kicker">この画像に3人のAIキャラが勝手につけた印象値</div>'
+            f'<div class="score-number">{escape(score)}</div>'
+            '<div class="score-caption">Your Three Vibe Impression Score</div>'
+            "</div>"
+        ),
+        unsafe_allow_html=True,
+    )
+
+
 def render_card(client: Client, row: dict[str, Any]) -> None:
     work_id = clean_text(row.get("id"))
     title = clean_text(row.get("share_title"), "Untitled")
     poster_name = clean_text(row.get("poster_name"), "匿名の投稿者")
-    published_at = format_date(row.get("created_at"))
-    three_vis = clean_text(row.get("three_vis"), "-")
-    focus_point = clean_text(row.get("focus_point"))
     image_url = get_image_url(client, row.get("image_path"))
 
     with st.container(border=True):
+        st.markdown('<div class="gallery-card">', unsafe_allow_html=True)
         render_image(image_url)
         st.markdown(f'<div class="card-title">{escape(title)}</div>', unsafe_allow_html=True)
-        st.markdown(
-            f'<div class="meta">by {escape(poster_name)}<br>公開日 {escape(published_at)}</div>',
-            unsafe_allow_html=True,
-        )
-        st.markdown(f'<div class="score-badge">3VIS: {escape(three_vis)}</div>', unsafe_allow_html=True)
-        render_focus_box(focus_point)
+        st.markdown(f'<div class="poster-name">by {escape(poster_name)}</div>', unsafe_allow_html=True)
+        st.markdown("</div>", unsafe_allow_html=True)
 
         if st.button("詳細を見る", key=f"detail-{work_id}", use_container_width=True):
             st.query_params["work_id"] = work_id
@@ -427,8 +510,8 @@ def render_detail(work_id: str) -> None:
     title = clean_text(row.get("share_title"), "Untitled")
     poster_name = clean_text(row.get("poster_name"), "匿名の投稿者")
     published_at = format_date(row.get("created_at"))
-    three_vis = clean_text(row.get("three_vis"), "-")
     focus_point = clean_text(row.get("focus_point"))
+    impression_score = clean_text(row.get("three_vis"), "-")
     image_url = get_image_url(client, row.get("image_path"))
 
     left, right = st.columns([1.28, 1], gap="large")
@@ -440,11 +523,8 @@ def render_detail(work_id: str) -> None:
         st.markdown(f'<div class="detail-title">{escape(title)}</div>', unsafe_allow_html=True)
         render_info_row("投稿者名", poster_name)
         render_info_row("公開日", published_at)
-        render_info_row("3VIS", three_vis)
-        if focus_point:
-            st.markdown('<div class="info-row"><div class="info-label">ココ見てほしい</div>', unsafe_allow_html=True)
-            render_focus_box(focus_point)
-            st.markdown("</div>", unsafe_allow_html=True)
+        render_focus_box(focus_point)
+        render_score_card(impression_score)
         st.markdown("</div>", unsafe_allow_html=True)
 
     st.divider()
