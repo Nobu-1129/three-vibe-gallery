@@ -5,6 +5,7 @@ from html import escape
 from typing import Any
 
 import streamlit as st
+import streamlit.components.v1 as components
 from supabase import Client, create_client
 import base64
 from pathlib import Path
