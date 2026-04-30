@@ -792,30 +792,6 @@ def render_ai_comment_card(character: str, initial: str, body: str, class_name: 
         },
     }
 
-    @media (max-width: 520px) {
-        .comment-wrap {
-            gap: 8px;
-        }
-        .icon-area {
-            min-width: 64px;
-            width: 64px;
-        }
-        .icon-circle {
-            width: 64px;
-            height: 64px;
-        }
-        .name {
-            font-size: 14px;
-        }
-        .bubble {
-            padding: 12px 13px;
-        }
-        .body {
-            font-size: 15px;
-            line-height: 1.7;
-        }
-    }
-
     style = comment_styles.get(
         class_name,
         {
