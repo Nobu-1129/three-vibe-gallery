@@ -359,28 +359,59 @@ def inject_css() -> None:
             .block-container {
                 padding-top: 3.4rem;
             }
+        
             div[data-testid="column"] {
-                width: 100% !important;
-                flex: 1 1 100% !important;
-                min-width: 100% !important;
+                width: calc(50% - 0.5rem) !important;
+                flex: 1 1 calc(50% - 0.5rem) !important;
+                min-width: calc(50% - 0.5rem) !important;
             }
+
             div[data-testid="stHorizontalBlock"] {
-                gap: 1.05rem;
+                gap: 0.75rem;
+                flex-wrap: wrap;
             }
+        
+            .brand-label {
+                font-size: 0.85rem;
+                line-height: 1.4;
+                margin-bottom: 0.6rem;
+            }
+        
             .gallery-title {
                 font-size: 2rem;
             }
+        
             .detail-main {
                 max-width: 100%;
             }
+        
             .detail-title {
-                font-size: 1.7rem;
+                font-size: 1.35rem;
+                line-height: 1.35;
+                word-break: keep-all;
+                overflow-wrap: anywhere;
             }
+        
             .thumb-frame {
-                height: 280px;
+                height: 150px;
             }
+        
             .card-title {
-                min-height: 0;
+                font-size: 0.95rem;
+                line-height: 1.35;
+                min-height: 2.6rem;
+                margin-top: 0.65rem;
+                margin-bottom: 0.25rem;
+            }
+
+            .poster-name {
+                font-size: 0.82rem;
+                margin-bottom: 0.65rem;
+            }
+
+            .stButton > button {
+                min-height: 2.4rem;
+                font-size: 0.9rem;
             }
         }
         </style>
