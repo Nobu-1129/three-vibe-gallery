@@ -6,6 +6,8 @@ from typing import Any
 
 import streamlit as st
 from supabase import Client, create_client
+import base64
+from pathlib import Path
 
 
 GALLERY_NAME = "Three Vibe Gallery"
@@ -21,6 +23,7 @@ SELECT_COLUMNS = (
     "id,created_at,share_title,poster_name,focus_point,three_vis,"
     "comment_jin,comment_reina,comment_takumi,image_path,is_public"
 )
+HERO_IMAGE_PATH = Path(__file__).parent / "assets" / "hero_gallery_ja.png"
 
 
 st.set_page_config(
@@ -462,6 +465,22 @@ def render_thumbnail(url: str | None) -> None:
         unsafe_allow_html=True,
     )
 
+def render_hero_image() -> None:
+    if not HERO_IMAGE_PATH.exists():
+        return
+
+    encoded_image = base64.b64encode(HERO_IMAGE_PATH.read_bytes()).decode("ascii")
+    st.markdown(
+        (
+            '<div style="margin: 0.75rem 0 2rem; width: 100%;">'
+            f'<img src="data:image/png;base64,{encoded_image}" '
+            'alt="その一枚を集めた画廊" '
+            'style="width: 100%; height: auto; display: block; border-radius: 14px;">'
+            "</div>"
+        ),
+        unsafe_allow_html=True,
+    )
+
 
 @st.cache_data(ttl=60)
 def fetch_public_works(limit: int = PAGE_SIZE) -> list[dict[str, Any]]:
@@ -661,6 +680,7 @@ def main() -> None:
     if work_id:
         render_detail(str(work_id))
     else:
+        render_hero_image()
         render_gallery()
 
 
