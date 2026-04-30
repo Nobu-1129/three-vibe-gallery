@@ -327,6 +327,69 @@ def inject_css() -> None:
             min-height: 100%;
             width: 100%;
         }
+
+        .works-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 1.2rem;
+        }
+
+        .work-card {
+            background: rgba(255, 255, 255, .9);
+            border: 1px solid #e5e7eb;
+            border-radius: 14px;
+            padding: .9rem;
+            box-sizing: border-box;
+        }
+        
+        .work-thumb {
+            height: 220px;
+            background: #f4f6f8;
+            border: 1px solid #eaecf0;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        
+        .work-thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            display: block;
+        }
+        
+        .work-title {
+            color: #182230;
+            font-size: 1.05rem;
+            font-weight: 830;
+            line-height: 1.35;
+            margin-top: .75rem;
+            min-height: 2.8rem;
+        }
+
+        .work-poster {
+            color: #5d6678;
+            font-size: .9rem;
+            font-weight: 650;
+            margin-top: .35rem;
+        }
+        
+        .work-button {
+            display: block;
+            text-align: center;
+            margin-top: .75rem;
+            padding: .55rem .5rem;
+            border: 1px solid #cfd5df;
+            border-radius: 9px;
+            color: #182230;
+            text-decoration: none;
+            font-size: .9rem;
+            font-weight: 700;
+            background: #ffffff;
+        }
+
         .stButton > button {
             min-height: 3rem;
             border-radius: 10px;
@@ -358,6 +421,38 @@ def inject_css() -> None:
         @media (max-width: 760px) {
             .block-container {
                 padding-top: 3.4rem;
+            }
+
+            .works-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: .65rem;
+            }
+
+            .work-card {
+                padding: .55rem;
+            }
+
+            .work-thumb {
+                height: 120px;
+            }
+
+            .work-title {
+                font-size: .75rem;
+                line-height: 1.35;
+                min-height: 2.1rem;
+                margin-top: .45rem;
+            }
+            
+            .work-poster {
+                font-size: .68rem;
+                margin-top: .2rem;
+            }
+
+            .work-button {
+                font-size: .7rem;
+                padding: .38rem .3rem;
+                margin-top: .45rem;
+                border-radius: 7px;
             }
         
             div[data-testid="stHorizontalBlock"] {
@@ -606,10 +701,41 @@ def render_gallery() -> None:
         return
 
     st.markdown('<div class="section-label">新着作品</div>', unsafe_allow_html=True)
-    columns = st.columns(3, gap="large")
-    for index, row in enumerate(works):
-        with columns[index % 3]:
-            render_card(client, row)
+
+    cards_html = []
+
+    for row in works:
+        work_id = clean_text(row.get("id"))
+        title = clean_text(row.get("share_title"), "Untitled")
+        poster_name = clean_text(row.get("poster_name"), "匿名の投稿者")
+        image_url = get_image_url(client, row.get("image_path"))
+
+        if image_url:
+            image_html = f'<img src="{escape(image_url)}" alt="{escape(title)}">'
+        else:
+            image_html = '<div class="image-placeholder">画像なし</div>'
+
+        cards_html.append(
+            f"""
+            <article class="work-card">
+                <div class="work-thumb">
+                    {image_html}
+                </div>
+                <div class="work-title">{escape(title)}</div>
+                <div class="work-poster">by {escape(poster_name)}</div>
+                <a class="work-button" href="?work_id={escape(work_id)}" target="_self">詳細を見る</a>
+            </article>
+            """
+        )
+
+    st.markdown(
+        f"""
+        <div class="works-grid">
+            {''.join(cards_html)}
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
 
 def render_info_panel(poster_name: str, published_at: str) -> None:
     st.markdown(
