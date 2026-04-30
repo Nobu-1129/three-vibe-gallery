@@ -595,22 +595,137 @@ def render_info_panel(poster_name: str, published_at: str) -> None:
         unsafe_allow_html=True,
     )
 
+CHARACTER_ICON_PATHS = {
+    "jin": "assets/icon_jin.png",
+    "reina": "assets/icon_reina.png",
+    "takumi": "assets/icon_takumi.png",
+}
+
+def image_file_to_data_uri(path: str) -> str:
+    file_path = Path(__file__).parent / path
+    if not file_path.exists():
+        return ""
+
+    with open(file_path, "rb") as f:
+        encoded = base64.b64encode(f.read()).decode("utf-8")
+
+    return f"data:image/png;base64,{encoded}"
 
 def render_ai_comment_card(character: str, initial: str, body: str, class_name: str) -> None:
     comment = clean_text(body, "コメントなし")
-    st.markdown(
-        (
-            f'<div class="ai-comment ai-comment-{class_name}">'
-            '<div class="ai-comment-head">'
-            f'<div class="ai-avatar avatar-{class_name}">{escape(initial)}</div>'
-            f'<div class="ai-comment-name">{escape(character)}</div>'
-            "</div>"
-            f'<div class="ai-comment-body">{escape(comment)}</div>'
-            "</div>"
-        ),
-        unsafe_allow_html=True,
+    icon_data_uri = image_file_to_data_uri(CHARACTER_ICON_PATHS.get(class_name, ""))
+
+    comment_styles = {
+        "jin": {
+            "icon_bg": "#cfe0ff",
+            "bubble_border": "#9bbcf7",
+            "bubble_bg": "#f3f8ff",
+            "reverse": False,
+        },
+        "reina": {
+            "icon_bg": "#ffd6e7",
+            "bubble_border": "#f5a8c8",
+            "bubble_bg": "#fffafb",
+            "reverse": True,
+        },
+        "takumi": {
+            "icon_bg": "#d9f5d6",
+            "bubble_border": "#9ed49a",
+            "bubble_bg": "#fbfffb",
+            "reverse": False,
+        },
+    }
+
+    style = comment_styles.get(class_name, {
+        "icon_bg": "#eeeeee",
+        "bubble_border": "#cccccc",
+        "bubble_bg": "#ffffff",
+        "reverse": False,
+    })
+
+    icon_html = (
+        f'<img src="{icon_data_uri}" style="width:180%; height:180%; object-fit:cover; object-position:center 20%;">'
+        if icon_data_uri
+        else f'<span style="font-size:1.2rem; font-weight:800;">{escape(initial)}</span>'
     )
 
+    flex_direction = "row-reverse" if style["reverse"] else "row"
+    arrow_side = "right" if style["reverse"] else "left"
+    arrow_border = (
+        f'border-right:1px solid {style["bubble_border"]}; border-top:1px solid {style["bubble_border"]}; right:-8px;'
+        if style["reverse"]
+        else f'border-left:1px solid {style["bubble_border"]}; border-bottom:1px solid {style["bubble_border"]}; left:-8px;'
+    )
+
+    st.markdown(
+        f"""
+<div style="display:flex; align-items:flex-start; gap:12px; margin-bottom:18px; flex-direction:{flex_direction};">
+    <div style="
+        min-width:90px;
+        width:90px;
+        flex-shrink:0;
+        margin-top:2px;
+        display:flex;
+        flex-direction:column;
+        align-items:center;
+        justify-content:flex-start;
+    ">
+        <div style="
+            width:90px;
+            height:90px;
+            border-radius:50%;
+            overflow:hidden;
+            background:{style["icon_bg"]};
+            display:flex;
+            align-items:center;
+            justify-content:center;
+        ">
+            {icon_html}
+        </div>
+
+        <div style="
+            margin-top:6px;
+            font-size:16px;
+            font-weight:700;
+            color:#444;
+            line-height:1.2;
+            text-align:center;
+            white-space:nowrap;
+        ">
+            {escape(character)}
+        </div>
+    </div>
+
+    <div style="
+        position:relative;
+        flex:1;
+        border:1px solid {style["bubble_border"]};
+        border-radius:16px;
+        background:{style["bubble_bg"]};
+        padding:14px 16px;
+    ">
+        <div style="
+            position:absolute;
+            {arrow_border}
+            top:16px;
+            width:14px;
+            height:14px;
+            background:{style["bubble_bg"]};
+            transform:rotate(45deg);
+        "></div>
+
+        <div style="
+            font-size:16px;
+            line-height:1.75;
+            color:#333;
+        ">
+            {escape(comment)}
+        </div>
+    </div>
+</div>
+""",
+        unsafe_allow_html=True,
+    )
 
 def render_detail(work_id: str) -> None:
     client = get_supabase()
@@ -650,15 +765,6 @@ def render_detail(work_id: str) -> None:
         render_ai_comment_card("レイナ", "レ", clean_text(row.get("comment_reina")), "reina")
         render_ai_comment_card("タクミ", "タ", clean_text(row.get("comment_takumi")), "takumi")
 
-        st.markdown(
-            (
-                '<div class="coming-soon">'
-                '<div class="soon-label">Coming soon</div>'
-                '<div class="soon-text">この評価をもっと深く見る機能は準備中です</div>'
-                "</div>"
-            ),
-            unsafe_allow_html=True,
-        )
         st.markdown("</div>", unsafe_allow_html=True)
 
 
