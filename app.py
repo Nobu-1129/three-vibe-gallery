@@ -918,6 +918,11 @@ def render_ai_comment_card(character: str, initial: str, body: str, class_name: 
 """
 
     comment_height = max(210, min(430, 140 + (len(comment) // 14) * 28))
+
+    # レイナは右アイコン配置の都合で、スマホ表示時に下余白が出やすいので少し詰める
+    if class_name == "reina":
+        comment_height = max(190, comment_height - 35)
+
     components.html(html, height=comment_height, scrolling=False)
 
 def render_detail(work_id: str) -> None:
