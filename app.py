@@ -8,6 +8,7 @@ import streamlit as st
 import streamlit.components.v1 as components
 from supabase import Client, create_client
 import base64
+import os
 from pathlib import Path
 
 
@@ -24,7 +25,7 @@ SELECT_COLUMNS = (
     "id,created_at,share_title,poster_name,focus_point,three_vis,"
     "comment_jin,comment_reina,comment_takumi,image_path,is_public"
 )
-HERO_IMAGE_PATH = Path(__file__).parent / "assets" / "hero_gallery_ja_mobile.png"
+HERO_IMAGE_PATH = Path(__file__).parent / "assets" / "hero_gallery_ja_mobile.jpg"
 
 
 st.set_page_config(
@@ -602,7 +603,7 @@ def render_hero_image() -> None:
     st.markdown(
         (
             '<div style="margin: 0.25rem 0 2rem; width: 100%;">'
-            f'<img src="data:image/png;base64,{encoded_image}" '
+            f'<img src="data:image/jpeg;base64,{encoded_image}" '
             'alt="その一枚を集めた画廊" '
             'style="width: 100%; height: auto; display: block; border-radius: 14px;">'
             "</div>"
@@ -752,9 +753,9 @@ def render_info_panel(poster_name: str, published_at: str) -> None:
     )
 
 CHARACTER_ICON_PATHS = {
-    "jin": "assets/icon_jin.png",
-    "reina": "assets/icon_reina.png",
-    "takumi": "assets/icon_takumi.png",
+    "jin": "assets/icon_jin.jpg",
+    "reina": "assets/icon_reina.jpg",
+    "takumi": "assets/icon_takumi.jpg",
 }
 
 def image_file_to_data_uri(path: str) -> str:
@@ -765,7 +766,10 @@ def image_file_to_data_uri(path: str) -> str:
     with open(file_path, "rb") as f:
         encoded = base64.b64encode(f.read()).decode("utf-8")
 
-    return f"data:image/png;base64,{encoded}"
+    ext = file_path.suffix.lower()
+    mime = "image/jpeg" if ext in [".jpg", ".jpeg"] else "image/png"
+
+    return f"data:{mime};base64,{encoded}"
 
 def render_ai_comment_card(character: str, initial: str, body: str, class_name: str) -> None:
     comment = clean_text(body, "コメントなし")
