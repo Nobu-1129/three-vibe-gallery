@@ -360,15 +360,16 @@ def inject_css() -> None:
                 padding-top: 3.4rem;
             }
         
-            div[data-testid="column"] {
-                width: calc(50% - 0.5rem) !important;
-                flex: 1 1 calc(50% - 0.5rem) !important;
-                min-width: calc(50% - 0.5rem) !important;
-            }
-
             div[data-testid="stHorizontalBlock"] {
-                gap: 0.75rem;
-                flex-wrap: wrap;
+                gap: 0.5rem !important;
+                flex-wrap: wrap !important;
+                align-items: stretch !important;
+            }
+            
+            div[data-testid="stHorizontalBlock"] > div[data-testid="column"] {
+                width: calc(50% - 0.25rem) !important;
+                flex: 0 0 calc(50% - 0.25rem) !important;
+                min-width: 0 !important;
             }
         
             .brand-label {
@@ -393,25 +394,26 @@ def inject_css() -> None:
             }
         
             .thumb-frame {
-                height: 150px;
+                height: 135px;
             }
         
             .card-title {
-                font-size: 0.95rem;
+                font-size: 0.78rem;
                 line-height: 1.35;
-                min-height: 2.6rem;
-                margin-top: 0.65rem;
-                margin-bottom: 0.25rem;
+                min-height: 2.2rem;
+                margin-top: 0.5rem;
+                margin-bottom: 0.2rem;
             }
 
             .poster-name {
-                font-size: 0.82rem;
-                margin-bottom: 0.65rem;
+                font-size: 0.75rem;
+                margin-bottom: 0.45rem;
             }
 
             .stButton > button {
-                min-height: 2.4rem;
-                font-size: 0.9rem;
+                min-height: 2rem;
+                font-size: 0.75rem;
+                padding: 0.25rem 0.4rem;
             }
         }
         </style>
