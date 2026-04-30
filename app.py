@@ -650,12 +650,115 @@ def render_ai_comment_card(character: str, initial: str, body: str, class_name: 
     )
 
     flex_direction = "row-reverse" if style["reverse"] else "row"
-    arrow_side = "right" if style["reverse"] else "left"
-    arrow_border = (
-        f'border-right:1px solid {style["bubble_border"]}; border-top:1px solid {style["bubble_border"]}; right:-8px;'
-        if style["reverse"]
-        else f'border-left:1px solid {style["bubble_border"]}; border-bottom:1px solid {style["bubble_border"]}; left:-8px;'
-    )
+
+    if style["reverse"]:
+        arrow_style = (
+            f"right:-8px;"
+            f"border-right:1px solid {style['bubble_border']};"
+            f"border-top:1px solid {style['bubble_border']};"
+        )
+    else:
+        arrow_style = (
+            f"left:-8px;"
+            f"border-left:1px solid {style['bubble_border']};"
+            f"border-bottom:1px solid {style['bubble_border']};"
+        )
+
+    html = f"""
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+    body {{
+        margin: 0;
+        padding: 0;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        background: transparent;
+    }}
+    .comment-wrap {{
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        margin-bottom: 18px;
+        flex-direction: {flex_direction};
+        width: 100%;
+        box-sizing: border-box;
+    }}
+    .icon-area {{
+        min-width: 90px;
+        width: 90px;
+        flex-shrink: 0;
+        margin-top: 2px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+    }}
+    .icon-circle {{
+        width: 90px;
+        height: 90px;
+        border-radius: 50%;
+        overflow: hidden;
+        background: {style["icon_bg"]};
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }}
+    .name {{
+        margin-top: 6px;
+        font-size: 16px;
+        font-weight: 700;
+        color: #444;
+        line-height: 1.2;
+        text-align: center;
+        white-space: nowrap;
+    }}
+    .bubble {{
+        position: relative;
+        flex: 1;
+        border: 1px solid {style["bubble_border"]};
+        border-radius: 16px;
+        background: {style["bubble_bg"]};
+        padding: 14px 16px;
+        box-sizing: border-box;
+    }}
+    .arrow {{
+        position: absolute;
+        {arrow_style}
+        top: 16px;
+        width: 14px;
+        height: 14px;
+        background: {style["bubble_bg"]};
+        transform: rotate(45deg);
+    }}
+    .body {{
+        font-size: 16px;
+        line-height: 1.75;
+        color: #333;
+        word-break: break-word;
+    }}
+</style>
+</head>
+<body>
+    <div class="comment-wrap">
+        <div class="icon-area">
+            <div class="icon-circle">
+                {icon_html}
+            </div>
+            <div class="name">{escape(character)}</div>
+        </div>
+
+        <div class="bubble">
+            <div class="arrow"></div>
+            <div class="body">{escape(comment)}</div>
+        </div>
+    </div>
+</body>
+</html>
+"""
+
+    components.html(html, height=185, scrolling=False)
 
     st.markdown(
         f"""
