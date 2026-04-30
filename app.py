@@ -24,7 +24,7 @@ SELECT_COLUMNS = (
     "id,created_at,share_title,poster_name,focus_point,three_vis,"
     "comment_jin,comment_reina,comment_takumi,image_path,is_public"
 )
-HERO_IMAGE_PATH = Path(__file__).parent / "assets" / "hero_gallery_ja.png"
+HERO_IMAGE_PATH = Path(__file__).parent / "assets" / "hero_gallery_ja_mobile.png"
 
 
 st.set_page_config(
