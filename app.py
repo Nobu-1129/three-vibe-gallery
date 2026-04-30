@@ -810,7 +810,7 @@ def render_ai_comment_card(character: str, initial: str, body: str, class_name: 
     ">
         <div style="
             position:absolute;
-            {arrow_border}
+            {arrow_style}
             top:16px;
             width:14px;
             height:14px;
