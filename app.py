@@ -472,7 +472,7 @@ def render_hero_image() -> None:
     encoded_image = base64.b64encode(HERO_IMAGE_PATH.read_bytes()).decode("ascii")
     st.markdown(
         (
-            '<div style="margin: 0.75rem 0 2rem; width: 100%;">'
+            '<div style="margin: 0.25rem 0 2rem; width: 100%;">'
             f'<img src="data:image/png;base64,{encoded_image}" '
             'alt="その一枚を集めた画廊" '
             'style="width: 100%; height: auto; display: block; border-radius: 14px;">'
@@ -513,19 +513,9 @@ def fetch_public_work(work_id: str) -> dict[str, Any] | None:
 
 def render_header() -> None:
     st.markdown(
-        f'<div class="brand-label">{EVALUATION_APP_NAME} / {EVALUATION_APP_NAME_JA} 公開作品ギャラリー</div>',
+        '<div class="brand-label">「その一枚、私達にも見せてもらえませんか？」 公開作品ギャラリー</div>',
         unsafe_allow_html=True,
     )
-    st.markdown(
-        f'<div class="gallery-title">{GALLERY_NAME}<br><span>{GALLERY_NAME_JA}</span></div>',
-        unsafe_allow_html=True,
-    )
-    st.markdown(f'<div class="gallery-lead">{TAGLINE}</div>', unsafe_allow_html=True)
-    st.markdown(
-        '<div class="gallery-sub">公開された作品だけを集めた、見るだけで楽しい小さな画廊です。</div>',
-        unsafe_allow_html=True,
-    )
-
 
 def render_focus_box(text: str) -> None:
     if not text:
