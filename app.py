@@ -578,7 +578,6 @@ def render_gallery() -> None:
         with columns[index % 3]:
             render_card(client, row)
 
-
 def render_info_panel(poster_name: str, published_at: str) -> None:
     st.markdown(
         (
@@ -637,12 +636,15 @@ def render_ai_comment_card(character: str, initial: str, body: str, class_name: 
         },
     }
 
-    style = comment_styles.get(class_name, {
-        "icon_bg": "#eeeeee",
-        "bubble_border": "#cccccc",
-        "bubble_bg": "#ffffff",
-        "reverse": False,
-    })
+    style = comment_styles.get(
+        class_name,
+        {
+            "icon_bg": "#eeeeee",
+            "bubble_border": "#cccccc",
+            "bubble_bg": "#ffffff",
+            "reverse": False,
+        },
+    )
 
     icon_html = (
         f'<img src="{icon_data_uri}" style="width:180%; height:180%; object-fit:cover; object-position:center 20%;">'
@@ -681,7 +683,7 @@ def render_ai_comment_card(character: str, initial: str, body: str, class_name: 
         display: flex;
         align-items: flex-start;
         gap: 12px;
-        margin-bottom: 18px;
+        margin-bottom: 0;
         flex-direction: {flex_direction};
         width: 100%;
         box-sizing: border-box;
@@ -759,77 +761,7 @@ def render_ai_comment_card(character: str, initial: str, body: str, class_name: 
 </html>
 """
 
-    components.html(html, height=185, scrolling=False)
-
-    st.markdown(
-        f"""
-<div style="display:flex; align-items:flex-start; gap:12px; margin-bottom:18px; flex-direction:{flex_direction};">
-    <div style="
-        min-width:90px;
-        width:90px;
-        flex-shrink:0;
-        margin-top:2px;
-        display:flex;
-        flex-direction:column;
-        align-items:center;
-        justify-content:flex-start;
-    ">
-        <div style="
-            width:90px;
-            height:90px;
-            border-radius:50%;
-            overflow:hidden;
-            background:{style["icon_bg"]};
-            display:flex;
-            align-items:center;
-            justify-content:center;
-        ">
-            {icon_html}
-        </div>
-
-        <div style="
-            margin-top:6px;
-            font-size:16px;
-            font-weight:700;
-            color:#444;
-            line-height:1.2;
-            text-align:center;
-            white-space:nowrap;
-        ">
-            {escape(character)}
-        </div>
-    </div>
-
-    <div style="
-        position:relative;
-        flex:1;
-        border:1px solid {style["bubble_border"]};
-        border-radius:16px;
-        background:{style["bubble_bg"]};
-        padding:14px 16px;
-    ">
-        <div style="
-            position:absolute;
-            {arrow_style}
-            top:16px;
-            width:14px;
-            height:14px;
-            background:{style["bubble_bg"]};
-            transform:rotate(45deg);
-        "></div>
-
-        <div style="
-            font-size:16px;
-            line-height:1.75;
-            color:#333;
-        ">
-            {escape(comment)}
-        </div>
-    </div>
-</div>
-""",
-        unsafe_allow_html=True,
-    )
+    components.html(html, height=170, scrolling=False)
 
 def render_detail(work_id: str) -> None:
     client = get_supabase()
