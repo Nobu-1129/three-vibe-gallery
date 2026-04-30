@@ -917,7 +917,7 @@ def render_ai_comment_card(character: str, initial: str, body: str, class_name: 
 </html>
 """
 
-    comment_height = max(260, min(520, 180 + (len(comment) // 14) * 32))
+    comment_height = max(220, min(460, 150 + (len(comment) // 14) * 30))
     components.html(html, height=comment_height, scrolling=False)
 
 def render_detail(work_id: str) -> None:
