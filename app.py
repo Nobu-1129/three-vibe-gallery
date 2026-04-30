@@ -702,7 +702,7 @@ def render_gallery() -> None:
 
     st.markdown('<div class="section-label">新着作品</div>', unsafe_allow_html=True)
 
-    cards_html = []
+    cards_html = ""
 
     for row in works:
         work_id = clean_text(row.get("id"))
@@ -715,27 +715,24 @@ def render_gallery() -> None:
         else:
             image_html = '<div class="image-placeholder">画像なし</div>'
 
-        cards_html.append(
-            f"""
-            <article class="work-card">
-                <div class="work-thumb">
-                    {image_html}
-                </div>
-                <div class="work-title">{escape(title)}</div>
-                <div class="work-poster">by {escape(poster_name)}</div>
-                <a class="work-button" href="?work_id={escape(work_id)}" target="_self">詳細を見る</a>
-            </article>
-            """
+        cards_html += (
+            '<article class="work-card">'
+            '<div class="work-thumb">'
+            f'{image_html}'
+            '</div>'
+            f'<div class="work-title">{escape(title)}</div>'
+            f'<div class="work-poster">by {escape(poster_name)}</div>'
+            f'<a class="work-button" href="?work_id={escape(work_id)}" target="_self">詳細を見る</a>'
+            '</article>'
         )
 
-    st.markdown(
-        f"""
-        <div class="works-grid">
-            {''.join(cards_html)}
-        </div>
-        """,
-        unsafe_allow_html=True,
+    gallery_html = (
+        '<div class="works-grid">'
+        f'{cards_html}'
+        '</div>'
     )
+
+    st.markdown(gallery_html, unsafe_allow_html=True)
 
 def render_info_panel(poster_name: str, published_at: str) -> None:
     st.markdown(
