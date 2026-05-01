@@ -975,13 +975,12 @@ def render_detail(work_id: str) -> None:
             st.rerun()
         return
 
-    if st.button("← 一覧へ戻る", use_container_width=True):
+    if st.button("← 一覧へ戻る", key=f"back-top-{work_id}", use_container_width=True):
         st.query_params.clear()
         st.rerun()
 
     title = clean_text(row.get("share_title"), "Untitled")
     poster_name = clean_text(row.get("poster_name"), "匿名の投稿者")
-    poster_profile = clean_text(row.get("poster_profile"))
     published_at = format_date(row.get("created_at"))
     focus_point = clean_text(row.get("focus_point"))
     impression_score = clean_text(row.get("three_vis"), "-")
@@ -994,7 +993,7 @@ def render_detail(work_id: str) -> None:
         st.markdown('<div class="detail-image-note"></div>', unsafe_allow_html=True)
         st.markdown(f'<div class="detail-title">{escape(title)}</div>', unsafe_allow_html=True)
 
-        render_info_panel(poster_name, published_at, poster_profile)
+        render_info_panel(poster_name, published_at)
         render_focus_box(focus_point)
         render_score_card(impression_score)
 
@@ -1003,8 +1002,13 @@ def render_detail(work_id: str) -> None:
         render_ai_comment_card("レイナ", "レ", clean_text(row.get("comment_reina")), "reina")
         render_ai_comment_card("タクミ", "タ", clean_text(row.get("comment_takumi")), "takumi")
 
-        st.markdown("</div>", unsafe_allow_html=True)
+        st.markdown("<div style='margin-top: 1.2rem;'></div>", unsafe_allow_html=True)
 
+        if st.button("← 一覧へ戻る", key=f"back-bottom-{work_id}", use_container_width=True):
+            st.query_params.clear()
+            st.rerun()
+
+        st.markdown("</div>", unsafe_allow_html=True)
 
 def render_contact_footer() -> None:
     st.markdown("""
