@@ -18,11 +18,12 @@ EVALUATION_APP_NAME = "Three Vibe Impression"
 EVALUATION_APP_NAME_JA = "そのイチ印象値"
 TAGLINE = "その一枚、私達にも見せてもらえませんか？"
 
+IMPRESSION_APP_URL = "https://three-vibe-impression-app-amy8zqpimaqbtkf4grxqj6.streamlit.app"
 TABLE_NAME = "image_evaluations"
 BUCKET_NAME = "evaluation-images"
 PAGE_SIZE = 24
 SELECT_COLUMNS = (
-    "id,created_at,share_title,poster_name,focus_point,three_vis,"
+    "id,created_at,share_title,poster_name,poster_profile,focus_point,three_vis,"
     "comment_jin,comment_reina,comment_takumi,image_path,is_public"
 )
 HERO_IMAGE_PATH = Path(__file__).parent / "assets" / "hero_gallery_ja_mobile.jpg"
@@ -611,6 +612,30 @@ def render_hero_image() -> None:
         unsafe_allow_html=True,
     )
 
+def render_impression_app_link() -> None:
+    st.markdown(
+        f"""
+        <div style="margin: -0.6rem 0 1.8rem; text-align: center;">
+          <a href="{IMPRESSION_APP_URL}" target="_blank" style="
+              display: inline-block;
+              width: 100%;
+              box-sizing: border-box;
+              padding: 13px 16px;
+              border-radius: 999px;
+              background: #ffffff;
+              border: 1px solid #d0d5dd;
+              color: #1f2937;
+              font-size: 16px;
+              font-weight: 700;
+              text-decoration: none;
+              box-shadow: 0 4px 14px rgba(31, 41, 55, 0.08);
+          ">
+            自分の一枚をAI評価してみる
+          </a>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
 
 @st.cache_data(ttl=60)
 def fetch_public_works(limit: int = PAGE_SIZE) -> list[dict[str, Any]]:
@@ -735,7 +760,17 @@ def render_gallery() -> None:
 
     st.markdown(gallery_html, unsafe_allow_html=True)
 
-def render_info_panel(poster_name: str, published_at: str) -> None:
+def render_info_panel(poster_name: str, published_at: str, poster_profile: str = "") -> None:
+    profile_html = ""
+
+    if poster_profile:
+        profile_html = (
+            '<div class="info-row">'
+            '<div class="info-label">投稿者プロフィール</div>'
+            f'<div class="info-value" style="white-space: pre-wrap;">{escape(poster_profile)}</div>'
+            '</div>'
+        )
+
     st.markdown(
         (
             '<div class="detail-panel">'
@@ -747,6 +782,7 @@ def render_info_panel(poster_name: str, published_at: str) -> None:
             '<div class="info-label">公開日</div>'
             f'<div class="info-value">{escape(published_at)}</div>'
             '</div>'
+            f'{profile_html}'
             '</div>'
         ),
         unsafe_allow_html=True,
@@ -946,6 +982,7 @@ def render_detail(work_id: str) -> None:
 
     title = clean_text(row.get("share_title"), "Untitled")
     poster_name = clean_text(row.get("poster_name"), "匿名の投稿者")
+    poster_profile = clean_text(row.get("poster_profile"))
     published_at = format_date(row.get("created_at"))
     focus_point = clean_text(row.get("focus_point"))
     impression_score = clean_text(row.get("three_vis"), "-")
@@ -958,7 +995,7 @@ def render_detail(work_id: str) -> None:
         st.markdown('<div class="detail-image-note"></div>', unsafe_allow_html=True)
         st.markdown(f'<div class="detail-title">{escape(title)}</div>', unsafe_allow_html=True)
 
-        render_info_panel(poster_name, published_at)
+        render_info_panel(poster_name, published_at, poster_profile)
         render_focus_box(focus_point)
         render_score_card(impression_score)
 
@@ -979,6 +1016,7 @@ def main() -> None:
         render_detail(str(work_id))
     else:
         render_hero_image()
+        render_impression_app_link()
         render_gallery()
 
 
