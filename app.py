@@ -1007,6 +1007,23 @@ def render_detail(work_id: str) -> None:
         st.markdown("</div>", unsafe_allow_html=True)
 
 
+def render_contact_footer() -> None:
+    st.markdown("""
+<div style="
+    margin-top: 28px;
+    padding: 14px 12px;
+    border-top: 1px solid #e5e7eb;
+    color: #555;
+    font-size: 14px;
+    line-height: 1.7;
+">
+  <strong>お問い合わせ</strong><br>
+  公開画像の削除依頼、不適切な画像の報告、その他のお問い合わせは、管理人までご連絡ください。<br>
+  連絡先：threevibe.gallery@gmail.com
+</div>
+""", unsafe_allow_html=True)
+
+
 def main() -> None:
     inject_css()
     render_header()
@@ -1018,6 +1035,8 @@ def main() -> None:
         render_hero_image()
         render_impression_app_link()
         render_gallery()
+
+    render_contact_footer()
 
 
 if __name__ == "__main__":
