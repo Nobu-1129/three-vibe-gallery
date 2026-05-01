@@ -667,8 +667,7 @@ def fetch_public_work(work_id: str) -> dict[str, Any] | None:
 
 def render_header() -> None:
     st.markdown(
-        '<div class="brand-label">「その一枚、私達にも見せてもらえませんか？」<br>
-         公開作品ギャラリー</div>',
+        '<div class="brand-label">「その一枚、私達にも見せてもらえませんか？」公開作品ギャラリー</div>',
         unsafe_allow_html=True,
     )
 
