@@ -613,7 +613,7 @@ def render_hero_image() -> None:
     )
 
 def render_impression_app_link() -> None:
-    IMPRESSION_APP_URL = "https://あなたの-three-vibe-impression-app-のURL.streamlit.app"
+    IMPRESSION_APP_URL = "https://three-vibe-impression-app-amy8zqpimaqbtkf4grxqj6.streamlit.app/"
 
     st.markdown(
         f"""
@@ -667,7 +667,8 @@ def fetch_public_work(work_id: str) -> dict[str, Any] | None:
 
 def render_header() -> None:
     st.markdown(
-        '<div class="brand-label">「その一枚、私達にも見せてもらえませんか？」 公開作品ギャラリー</div>',
+        '<div class="brand-label">「その一枚、私達にも見せてもらえませんか？」<br>
+         公開作品ギャラリー</div>',
         unsafe_allow_html=True,
     )
 
