@@ -613,27 +613,26 @@ def render_hero_image() -> None:
     )
 
 def render_impression_app_link() -> None:
+    IMPRESSION_APP_URL = "https://あなたの-three-vibe-impression-app-のURL.streamlit.app"
+
     st.markdown(
         f"""
-        <div style="margin: -0.6rem 0 1.8rem; text-align: center;">
-          <a href="{IMPRESSION_APP_URL}" target="_blank" style="
-              display: inline-block;
-              width: 100%;
-              box-sizing: border-box;
-              padding: 13px 16px;
-              border-radius: 999px;
-              background: #ffffff;
-              border: 1px solid #d0d5dd;
-              color: #1f2937;
-              font-size: 16px;
-              font-weight: 700;
-              text-decoration: none;
-              box-shadow: 0 4px 14px rgba(31, 41, 55, 0.08);
-          ">
-            自分の一枚をAI評価してみる
-          </a>
-        </div>
-        """,
+<div style="
+    margin-top: 28px;
+    margin-bottom: 10px;
+    text-align: center;
+    font-size: 14px;
+    line-height: 1.6;
+">
+  <a href="{IMPRESSION_APP_URL}" target="_blank" style="
+      color: #4b5563;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+  ">
+    自分の一枚をAI評価してみる
+  </a>
+</div>
+""",
         unsafe_allow_html=True,
     )
 
@@ -1033,9 +1032,9 @@ def main() -> None:
         render_detail(str(work_id))
     else:
         render_hero_image()
-        render_impression_app_link()
         render_gallery()
 
+    render_impression_app_link()
     render_contact_footer()
 
 
