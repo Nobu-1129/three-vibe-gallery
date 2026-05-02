@@ -3,6 +3,7 @@ from __future__ import annotations
 from datetime import datetime
 from html import escape
 from typing import Any
+import json
 
 import streamlit as st
 import streamlit.components.v1 as components
@@ -24,6 +25,7 @@ BUCKET_NAME = "evaluation-images"
 PAGE_SIZE = 24
 SELECT_COLUMNS = (
     "id,created_at,share_title,poster_name,poster_profile,focus_point,three_vis,"
+    "appeal_targets,"
     "comment_jin,comment_reina,comment_takumi,image_path,is_public"
 )
 HERO_IMAGE_PATH = Path(__file__).parent / "assets" / "hero_gallery_ja_mobile.jpg"
@@ -377,6 +379,28 @@ def inject_css() -> None:
             font-weight: 650;
             margin-top: .35rem;
         }
+
+        .tag-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: .28rem;
+            margin-top: .45rem;
+            min-height: 1.6rem;
+        }
+
+        .tag-chip {
+            display: inline-flex;
+            align-items: center;
+            background: #f2f4f7;
+            border: 1px solid #e5e7eb;
+            border-radius: 999px;
+            color: #475467;
+            font-size: .78rem;
+            font-weight: 700;
+            line-height: 1.2;
+            padding: .22rem .5rem;
+            white-space: nowrap;
+        }
         
         .work-button {
             display: block;
@@ -448,6 +472,17 @@ def inject_css() -> None:
             .work-poster {
                 font-size: .68rem;
                 margin-top: .2rem;
+            }
+
+            .tag-row {
+                gap: .2rem;
+                margin-top: .3rem;
+                min-height: 1.25rem;
+            }
+
+            .tag-chip {
+                font-size: .58rem;
+                padding: .16rem .34rem;
             }
 
             .work-button {
@@ -529,6 +564,52 @@ def clean_text(value: Any, default: str = "") -> str:
         return default
     text = str(value).strip()
     return text if text else default
+
+def normalize_tags(value: Any) -> list[str]:
+    if value is None:
+        return []
+
+    if isinstance(value, list):
+        return [clean_text(item) for item in value if clean_text(item)]
+
+    if isinstance(value, tuple):
+        return [clean_text(item) for item in value if clean_text(item)]
+
+    text = clean_text(value)
+    if not text:
+        return []
+
+    # JSON文字列っぽい場合: ["写真好き","動物好き"]
+    if text.startswith("[") and text.endswith("]"):
+        try:
+            parsed = json.loads(text)
+            if isinstance(parsed, list):
+                return [clean_text(item) for item in parsed if clean_text(item)]
+        except Exception:
+            pass
+
+    # Postgres配列文字列っぽい場合: {写真好き,動物好き}
+    if text.startswith("{") and text.endswith("}"):
+        inner = text[1:-1]
+        return [clean_text(item.strip().strip('"')) for item in inner.split(",") if clean_text(item.strip().strip('"'))]
+
+    # 念のためカンマ区切りにも対応
+    return [clean_text(item) for item in text.split(",") if clean_text(item)]
+
+
+def make_tag_chips_html(tags: list[str], max_tags: int = 4) -> str:
+    safe_tags = tags[:max_tags]
+
+    if not safe_tags:
+        return ""
+
+    chips = "".join(
+        f'<span class="tag-chip">{escape(tag)}</span>'
+        for tag in safe_tags
+    )
+
+    return f'<div class="tag-row">{chips}</div>'
+
 
 
 def format_date(value: Any) -> str:
@@ -734,6 +815,8 @@ def render_gallery() -> None:
         title = clean_text(row.get("share_title"), "Untitled")
         poster_name = clean_text(row.get("poster_name"), "匿名の投稿者")
         image_url = get_image_url(client, row.get("image_path"))
+        tags = normalize_tags(row.get("appeal_targets"))
+        tags_html = make_tag_chips_html(tags)
 
         if image_url:
             image_html = f'<img src="{escape(image_url)}" alt="{escape(title)}">'
@@ -747,6 +830,7 @@ def render_gallery() -> None:
             '</div>'
             f'<div class="work-title">{escape(title)}</div>'
             f'<div class="work-poster">by {escape(poster_name)}</div>'
+            f'{tags_html}'
             f'<a class="work-button" href="?work_id={escape(work_id)}" target="_self">詳細を見る</a>'
             '</article>'
         )
