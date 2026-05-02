@@ -3,6 +3,7 @@ from __future__ import annotations
 from datetime import datetime
 from html import escape
 from typing import Any
+from urllib.parse import quote
 import json
 
 import streamlit as st
@@ -401,6 +402,64 @@ def inject_css() -> None:
             padding: .22rem .5rem;
             white-space: nowrap;
         }
+
+        .tag-filter-wrap {
+            display: flex;
+            flex-wrap: nowrap;
+            gap: .45rem;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            padding: .25rem 0 .65rem;
+            margin: .2rem 0 .7rem;
+        }
+
+        .tag-filter-wrap::-webkit-scrollbar {
+            height: 6px;
+        }
+
+        .tag-filter-wrap::-webkit-scrollbar-thumb {
+            background: #d0d5dd;
+            border-radius: 999px;
+        }
+
+        .tag-filter-chip {
+            display: inline-flex;
+            align-items: center;
+            flex: 0 0 auto;
+            background: rgba(255, 255, 255, .92);
+            border: 1px solid #d0d5dd;
+            border-radius: 999px;
+            color: #344054;
+            font-size: .88rem;
+            font-weight: 760;
+            line-height: 1.2;
+            padding: .42rem .72rem;
+            text-decoration: none;
+            white-space: nowrap;
+        }
+
+        .tag-filter-chip:hover {
+            background: #f2f4f7;
+        }
+
+        .tag-filter-chip-selected {
+            background: #344054;
+            border-color: #344054;
+            color: #ffffff;
+        }
+
+        .tag-filter-chip-selected:hover {
+            background: #344054;
+            color: #ffffff;
+        }
+
+        .tag-filter-box {
+            background: rgba(255, 255, 255, .78);
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: .8rem .85rem .55rem;
+            margin: .45rem 0 1rem;
+        }
         
         .work-button {
             display: block;
@@ -483,6 +542,22 @@ def inject_css() -> None:
             .tag-chip {
                 font-size: .58rem;
                 padding: .16rem .34rem;
+            }
+
+            .tag-filter-wrap {
+                gap: .35rem;
+                padding-bottom: .55rem;
+                margin-bottom: .55rem;
+            }
+
+            .tag-filter-chip {
+                font-size: .75rem;
+                padding: .34rem .56rem;
+            }
+
+            .tag-filter-box {
+                padding: .65rem .65rem .45rem;
+                margin: .35rem 0 .85rem;
             }
 
             .work-button {
@@ -629,6 +704,28 @@ def collect_all_tags(rows: list[dict[str, Any]]) -> list[str]:
                 tag_set.add(tag)
 
     return sorted(tag_set)
+
+def make_tag_filter_html(all_tags: list[str], selected_tag: str = "") -> str:
+    chips = []
+
+    all_class = "tag-filter-chip tag-filter-chip-selected" if not selected_tag else "tag-filter-chip"
+    chips.append(
+        f'<a class="{all_class}" href="?" target="_self">すべて</a>'
+    )
+
+    for tag in all_tags:
+        label = format_tag_label(tag)
+        tag_url = f"?tag={quote(tag)}"
+        class_name = "tag-filter-chip"
+
+        if tag == selected_tag:
+            class_name += " tag-filter-chip-selected"
+
+        chips.append(
+            f'<a class="{class_name}" href="{tag_url}" target="_self">{escape(label)}</a>'
+        )
+
+    return f'<div class="tag-filter-wrap">{"".join(chips)}</div>'
 
 
 def format_date(value: Any) -> str:
@@ -833,47 +930,45 @@ def render_gallery() -> None:
         selected_tag = ""
 
     if all_tags:
-        st.markdown('<div class="section-label">タグで見る</div>', unsafe_allow_html=True)
+if all_tags:
+    st.markdown('<div class="section-label">タグで見る</div>', unsafe_allow_html=True)
 
-        tag_button_columns = st.columns(3)
+    tag_display_mode = st.radio(
+        "タグ表示方法",
+        ["横スクロール", "折りたたみ"],
+        horizontal=True,
+        label_visibility="collapsed",
+    )
 
-        for index, tag in enumerate(all_tags):
-            display_label = format_tag_label(tag)
-            button_label = f"✓ {display_label}" if tag == selected_tag else display_label
+    tag_filter_html = make_tag_filter_html(all_tags, selected_tag)
 
-            with tag_button_columns[index % 3]:
-                if st.button(button_label, key=f"tag-filter-{tag}", use_container_width=True):
-                    if selected_tag == tag:
-                        st.query_params.pop("tag", None)
-                    else:
-                        st.query_params["tag"] = tag
-                    st.rerun()
+    if tag_display_mode == "折りたたみ":
+        with st.expander("タグで絞り込む", expanded=bool(selected_tag)):
+            st.markdown(tag_filter_html, unsafe_allow_html=True)
+    else:
+        st.markdown(tag_filter_html, unsafe_allow_html=True)
 
-        if selected_tag:
-            selected_label = format_tag_label(selected_tag)
+    if selected_tag:
+        selected_label = format_tag_label(selected_tag)
 
-            st.markdown(
-                f"""
-                <div style="
-                    margin: .8rem 0 1rem;
-                    padding: .75rem .9rem;
-                    border: 1px solid #e5e7eb;
-                    border-radius: 12px;
-                    background: rgba(255,255,255,.82);
-                    color: #344054;
-                    font-size: 1rem;
-                    font-weight: 700;
-                    line-height: 1.5;
-                ">
-                    「{escape(selected_label)}」の作品を表示中
-                </div>
-                """,
-                unsafe_allow_html=True,
-            )
-
-            if st.button("絞り込みを解除", key="clear-tag-filter", use_container_width=True):
-                st.query_params.pop("tag", None)
-                st.rerun()
+        st.markdown(
+            f"""
+            <div style="
+                margin: .35rem 0 1rem;
+                padding: .7rem .85rem;
+                border: 1px solid #e5e7eb;
+                border-radius: 12px;
+                background: rgba(255,255,255,.82);
+                color: #344054;
+                font-size: .95rem;
+                font-weight: 700;
+                line-height: 1.5;
+            ">
+                「{escape(selected_label)}」の作品を表示中
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
 
     if selected_tag:
         works = [
