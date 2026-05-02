@@ -932,20 +932,8 @@ def render_gallery() -> None:
     if all_tags:
         st.markdown('<div class="section-label">タグで見る</div>', unsafe_allow_html=True)
 
-        tag_display_mode = st.radio(
-            "タグ表示方法",
-            ["横スクロール", "折りたたみ"],
-            horizontal=True,
-            label_visibility="collapsed",
-        )
-
         tag_filter_html = make_tag_filter_html(all_tags, selected_tag)
-
-        if tag_display_mode == "折りたたみ":
-            with st.expander("タグで絞り込む", expanded=bool(selected_tag)):
-                st.markdown(tag_filter_html, unsafe_allow_html=True)
-        else:
-            st.markdown(tag_filter_html, unsafe_allow_html=True)
+        st.markdown(tag_filter_html, unsafe_allow_html=True)
 
         if selected_tag:
             selected_label = format_tag_label(selected_tag)
