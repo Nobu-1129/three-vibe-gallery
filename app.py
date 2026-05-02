@@ -1077,6 +1077,8 @@ def render_detail(work_id: str) -> None:
     focus_point = clean_text(row.get("focus_point"))
     impression_score = clean_text(row.get("three_vis"), "-")
     image_url = get_image_url(client, row.get("image_path"))
+    tags = normalize_tags(row.get("appeal_targets"))
+    tags_html = make_tag_chips_html(tags)
 
     center_left, center_main, center_right = st.columns([1, 8, 1])
     with center_main:
@@ -1084,6 +1086,9 @@ def render_detail(work_id: str) -> None:
         render_image(image_url, large=True)
         st.markdown('<div class="detail-image-note"></div>', unsafe_allow_html=True)
         st.markdown(f'<div class="detail-title">{escape(title)}</div>', unsafe_allow_html=True)
+
+        if tags_html:
+            st.markdown(tags_html, unsafe_allow_html=True)
 
         render_info_panel(poster_name, published_at)
         render_focus_box(focus_point)
