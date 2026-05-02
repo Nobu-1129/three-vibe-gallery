@@ -619,6 +619,17 @@ def make_tag_chips_html(tags: list[str], max_tags: int = 4) -> str:
 
     return f'<div class="tag-row">{chips}</div>'
 
+def collect_all_tags(rows: list[dict[str, Any]]) -> list[str]:
+    tag_set = set()
+
+    for row in rows:
+        tags = normalize_tags(row.get("appeal_targets"))
+        for tag in tags:
+            if tag:
+                tag_set.add(tag)
+
+    return sorted(tag_set)
+
 
 def format_date(value: Any) -> str:
     raw = clean_text(value)
@@ -814,7 +825,68 @@ def render_gallery() -> None:
         st.info("公開中の作品はまだありません。")
         return
 
-    st.markdown('<div class="section-label">新着作品</div>', unsafe_allow_html=True)
+    all_tags = collect_all_tags(works)
+
+    selected_tag = st.query_params.get("tag", "")
+
+    if selected_tag and selected_tag not in all_tags:
+        selected_tag = ""
+
+    if all_tags:
+        st.markdown('<div class="section-label">タグで見る</div>', unsafe_allow_html=True)
+
+        tag_button_columns = st.columns(3)
+
+        for index, tag in enumerate(all_tags):
+            display_label = format_tag_label(tag)
+            button_label = f"✓ {display_label}" if tag == selected_tag else display_label
+
+            with tag_button_columns[index % 3]:
+                if st.button(button_label, key=f"tag-filter-{tag}", use_container_width=True):
+                    if selected_tag == tag:
+                        st.query_params.pop("tag", None)
+                    else:
+                        st.query_params["tag"] = tag
+                    st.rerun()
+
+        if selected_tag:
+            selected_label = format_tag_label(selected_tag)
+
+            st.markdown(
+                f"""
+                <div style="
+                    margin: .8rem 0 1rem;
+                    padding: .75rem .9rem;
+                    border: 1px solid #e5e7eb;
+                    border-radius: 12px;
+                    background: rgba(255,255,255,.82);
+                    color: #344054;
+                    font-size: 1rem;
+                    font-weight: 700;
+                    line-height: 1.5;
+                ">
+                    「{escape(selected_label)}」の作品を表示中
+                </div>
+                """,
+                unsafe_allow_html=True,
+            )
+
+            if st.button("絞り込みを解除", key="clear-tag-filter", use_container_width=True):
+                st.query_params.pop("tag", None)
+                st.rerun()
+
+    if selected_tag:
+        works = [
+            row for row in works
+            if selected_tag in normalize_tags(row.get("appeal_targets"))
+        ]
+
+    if selected_tag and not works:
+        st.info("このタグの公開作品はまだありません。")
+        return
+
+    section_title = "絞り込み結果" if selected_tag else "新着作品"
+    st.markdown(f'<div class="section-label">{section_title}</div>', unsafe_allow_html=True)
 
     cards_html = ""
 
