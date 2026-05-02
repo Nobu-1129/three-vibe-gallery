@@ -930,45 +930,45 @@ def render_gallery() -> None:
         selected_tag = ""
 
     if all_tags:
-if all_tags:
-    st.markdown('<div class="section-label">タグで見る</div>', unsafe_allow_html=True)
+    if all_tags:
+        st.markdown('<div class="section-label">タグで見る</div>', unsafe_allow_html=True)
 
-    tag_display_mode = st.radio(
-        "タグ表示方法",
-        ["横スクロール", "折りたたみ"],
-        horizontal=True,
-        label_visibility="collapsed",
-    )
-
-    tag_filter_html = make_tag_filter_html(all_tags, selected_tag)
-
-    if tag_display_mode == "折りたたみ":
-        with st.expander("タグで絞り込む", expanded=bool(selected_tag)):
-            st.markdown(tag_filter_html, unsafe_allow_html=True)
-    else:
-        st.markdown(tag_filter_html, unsafe_allow_html=True)
-
-    if selected_tag:
-        selected_label = format_tag_label(selected_tag)
-
-        st.markdown(
-            f"""
-            <div style="
-                margin: .35rem 0 1rem;
-                padding: .7rem .85rem;
-                border: 1px solid #e5e7eb;
-                border-radius: 12px;
-                background: rgba(255,255,255,.82);
-                color: #344054;
-                font-size: .95rem;
-                font-weight: 700;
-                line-height: 1.5;
-            ">
-                「{escape(selected_label)}」の作品を表示中
-            </div>
-            """,
-            unsafe_allow_html=True,
+        tag_display_mode = st.radio(
+            "タグ表示方法",
+            ["横スクロール", "折りたたみ"],
+            horizontal=True,
+            label_visibility="collapsed",
         )
+
+        tag_filter_html = make_tag_filter_html(all_tags, selected_tag)
+
+        if tag_display_mode == "折りたたみ":
+            with st.expander("タグで絞り込む", expanded=bool(selected_tag)):
+                st.markdown(tag_filter_html, unsafe_allow_html=True)
+        else:
+            st.markdown(tag_filter_html, unsafe_allow_html=True)
+
+        if selected_tag:
+            selected_label = format_tag_label(selected_tag)
+
+            st.markdown(
+                f"""
+                <div style="
+                    margin: .35rem 0 1rem;
+                    padding: .7rem .85rem;
+                    border: 1px solid #e5e7eb;
+                    border-radius: 12px;
+                    background: rgba(255,255,255,.82);
+                    color: #344054;
+                    font-size: .95rem;
+                    font-weight: 700;
+                    line-height: 1.5;
+                ">
+                    「{escape(selected_label)}」の作品を表示中
+                </div>
+                """,
+                unsafe_allow_html=True,
+            )
 
     if selected_tag:
         works = [
