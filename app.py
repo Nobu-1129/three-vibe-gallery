@@ -597,6 +597,15 @@ def normalize_tags(value: Any) -> list[str]:
     return [clean_text(item) for item in text.split(",") if clean_text(item)]
 
 
+def format_tag_label(tag: str) -> str:
+    text = clean_text(tag)
+
+    if text.endswith("好き"):
+        return text[:-2]
+
+    return text
+
+
 def make_tag_chips_html(tags: list[str], max_tags: int = 4) -> str:
     safe_tags = tags[:max_tags]
 
@@ -604,12 +613,11 @@ def make_tag_chips_html(tags: list[str], max_tags: int = 4) -> str:
         return ""
 
     chips = "".join(
-        f'<span class="tag-chip">{escape(tag)}</span>'
+        f'<span class="tag-chip">{escape(format_tag_label(tag))}</span>'
         for tag in safe_tags
     )
 
     return f'<div class="tag-row">{chips}</div>'
-
 
 
 def format_date(value: Any) -> str:
