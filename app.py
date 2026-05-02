@@ -930,7 +930,6 @@ def render_gallery() -> None:
         selected_tag = ""
 
     if all_tags:
-    if all_tags:
         st.markdown('<div class="section-label">タグで見る</div>', unsafe_allow_html=True)
 
         tag_display_mode = st.radio(
